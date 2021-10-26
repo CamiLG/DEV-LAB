@@ -1,10 +1,15 @@
-import pymysql
+from flask_sqlalchemy import SQLAlchemy
 
-from flask import current_app
-from flask import g
-from flask import cli
+db = SQLAlchemy()
 
+def init_app(app):
+    global db
+    conf = app.config
+    app.config['SQLALCHEMY_DATABASE_URI']=f'mysql://{conf["DB_USER"]}:{conf["DB_PASS"]}@{conf["DB_HOST"]}/{conf["DB_NAME"]}'
+    db.init_app(app)
+    db.create_all()
 
+'''
 def connection():
     if "db_conn" not in g:
         conf = current_app.config
@@ -28,3 +33,4 @@ def close(e=None):
 
 def init_app(app):
     app.teardown_appcontext(close)
+'''
